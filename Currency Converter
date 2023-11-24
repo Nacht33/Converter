@@ -1,0 +1,76 @@
+import tkinter as tk
+from tkinter import messagebox
+import requests
+
+def convert_currency():
+    try:
+        amount = float(amount_entry.get())
+        base_currency = currency_entry.get().upper()
+        target_currency = currency2_entry.get().upper()
+        exchange_rate = get_exchange_rate(base_currency, target_currency)
+        converted_amount = amount * exchange_rate
+        result_text.set(f"{amount} {base_currency} is equal to {converted_amount} {target_currency}")
+    except Exception as e:
+        messagebox.showerror("Error", str(e))
+
+def get_exchange_rate(base_currency, target_currency):
+    response = requests.get(f'https://api.exchangerate-api.com/v4/latest/{base_currency}')
+    data = response.json()
+    exchange_rate = data['rates'][target_currency]
+    return exchange_rate
+
+# create the main window
+window = tk.Tk()
+window.title("Currency Converter")
+
+# configure background and font styles
+bg_color = '#f0f0f0'
+font_style = ('Arial', 12)
+
+window.configure(bg=bg_color)
+
+# create labels
+label_bg = '#d9d9d9'
+label_fg = 'black'
+
+amount_label = tk.Label(window, text="Enter the amount to convert:", bg=label_bg, fg=label_fg, font=font_style)
+amount_label.grid(row=0, column=0, padx=10, pady=5)
+
+currency_label = tk.Label(window, text="Enter the base currency:", bg=label_bg, fg=label_fg, font=font_style)
+currency_label.grid(row=1, column=0, padx=10, pady=5)
+
+currency2_label = tk.Label(window, text="Enter the target currency:", bg=label_bg, fg=label_fg, font=font_style)
+currency2_label.grid(row=2, column=0, padx=10, pady=5)
+
+result_label = tk.Label(window, text="Result:", bg=label_bg, fg=label_fg, font=font_style)
+result_label.grid(row=3, column=0, padx=10, pady=5)
+
+# create text entry boxes
+entry_bg = 'white'
+entry_fg = 'black'
+entry_style = ('Arial', 11)
+
+amount_entry = tk.Entry(window, bg=entry_bg, fg=entry_fg, font=entry_style)
+amount_entry.grid(row=0, column=1, padx=10, pady=5)
+
+currency_entry = tk.Entry(window, bg=entry_bg, fg=entry_fg, font=entry_style)
+currency_entry.grid(row=1, column=1, padx=10, pady=5)
+
+currency2_entry = tk.Entry(window, bg=entry_bg, fg=entry_fg, font=entry_style)
+currency2_entry.grid(row=2, column=1, padx=10, pady=5)
+
+# create result label
+result_text = tk.StringVar()
+result_label = tk.Label(window, textvariable=result_text, bg=bg_color, fg='black', font=font_style)
+result_label.grid(row=4, column=0, columnspan=2, padx=10, pady=5)
+
+# create button
+button_bg = '#4caf50'
+button_fg = 'white'
+button_font = ('Arial', 12, 'bold')
+
+convert_button = tk.Button(window, text="Convert", command=convert_currency, bg=button_bg, fg=button_fg, font=button_font)
+convert_button.grid(row=5, column=0, columnspan=2, padx=10, pady=10, sticky='WE')
+
+# start the tkinter event loop
+window.mainloop()

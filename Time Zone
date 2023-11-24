@@ -1,0 +1,76 @@
+import tkinter as tk
+from tkinter import ttk
+from datetime import datetime
+from pytz import timezone
+
+class TimezoneApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Timezone Converter")
+
+        # Variables
+        self.country_var = tk.StringVar()
+        self.time_var = tk.StringVar()
+
+        # Combobox widget
+        country_combobox = ttk.Combobox(root, textvariable=self.country_var, values=list(self.timezones.keys()))
+        country_combobox.grid(row=0, column=0, padx=10, pady=10)
+
+        # Label to display the time
+        time_label = ttk.Label(root, textvariable=self.time_var, font=('Helvetica', 14))
+        time_label.grid(row=1, column=0, pady=10)
+
+        # Button to get the time
+        get_time_button = ttk.Button(root, text="Get Time", command=self.get_time)
+        get_time_button.grid(row=2, column=0, pady=10)
+
+    # Define the timezones
+    timezones = {
+        'Bangladesh': 'Asia/Dhaka',
+        'Germany': 'Europe/Berlin',
+        'Canada': 'America/Toronto',
+        'United Kingdom': 'Europe/London',
+        'United States of America': 'America/New_York',
+        'Sweden': 'Europe/Stockholm',
+        'Australia': 'Australia/Sydney',
+        'Japan': 'Asia/Tokyo',
+        'France': 'Europe/Paris',
+        'Netherlands': 'Europe/Amsterdam',
+        'Denmark': 'Europe/Copenhagen',
+        'New Zealand': 'Pacific/Auckland',
+        'Austria': 'Europe/Vienna',
+        'Italy': 'Europe/Rome',
+        'Luxembourg': 'Europe/Luxembourg',
+        'Singapore': 'Asia/Singapore',
+        'Spain': 'Europe/Madrid',
+        'China': 'Asia/Shanghai',
+        'Ireland': 'Europe/Dublin',
+        'South Korea': 'Asia/Seoul',
+        'Brazil': 'America/Sao_Paulo',
+        'Thailand': 'Asia/Bangkok',
+        'India': 'Asia/Kolkata',
+        'Portugal': 'Europe/Lisbon',
+        'Russia': 'Europe/Moscow'
+    }
+
+    def get_time(self):
+        country = self.country_var.get()
+        tz = self.timezones.get(country)
+
+        if tz:
+            current_tz = timezone(tz)
+            current_time = datetime.now(current_tz)
+            self.time_var.set(f"Current time in {country}: {current_time}")
+        else:
+            self.time_var.set("Please select a valid country.")
+
+        # Schedule the function to be called again after 1000ms (1 second)
+        self.root.after(1000, self.get_time)
+
+def main():
+    root = tk.Tk()
+    app = TimezoneApp(root)
+    root.mainloop()
+
+if __name__ == "__main__":
+    main()

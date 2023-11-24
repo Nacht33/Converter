@@ -1,0 +1,54 @@
+import tkinter as tk
+
+def convert():
+    number = number_entry.get()
+    base = base_var.get()
+
+    if base == "Binary":
+        decimal = int(number, 2)
+    elif base == "Octal":
+        decimal = int(number, 8)
+    elif base == "Decimal":
+        decimal = int(number)
+    elif base == "Hexadecimal":
+        decimal = int(number, 16)
+
+    binary = bin(decimal).replace("0b", "")
+    octal = oct(decimal).replace("0o", "")
+    hexadecimal = hex(decimal).replace("0x", "")
+
+    output_text.set(f"Binary: {binary}\nOctal: {octal}\nDecimal: {decimal}\nHexadecimal: {hexadecimal}")
+
+root = tk.Tk()
+root.title("Number Base Converter")
+root.geometry("300x250")
+
+# Colors
+button_color = "#808080"  # Green button color
+text_color = "#FF0000"  # Dark gray text color
+label_color = "#FF0000"  # Blue label color
+
+root.configure(bg="#f0f0f0")  # Set the background color of the root window
+
+base_var = tk.StringVar(root)
+base_var.set("Binary")
+
+base_option = tk.OptionMenu(root, base_var, "Binary", "Octal", "Decimal", "Hexadecimal")
+base_option.config(bg=button_color)
+base_option.pack(pady=10)
+
+number_entry = tk.Entry(root)
+number_entry.pack(pady=10)
+
+convert_button = tk.Button(root, text="Convert", command=convert, bg="#000000", fg="white")
+convert_button.pack(pady=10)
+
+output_text = tk.StringVar(root)
+output_label = tk.Label(root, textvariable=output_text, justify="left", fg=text_color)
+output_label.pack(pady=10)
+
+# Changing label colors
+output_label.config(fg=label_color)
+convert_button.config(activebackground=label_color, activeforeground="white")
+
+root.mainloop()
